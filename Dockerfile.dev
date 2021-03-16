@@ -1,0 +1,16 @@
+FROM jupyter/base-notebook
+
+RUN mkdir nudge-matcher
+WORKDIR /home/jovyan/nudge-matcher
+
+USER root
+RUN apt-get update && apt-get install postgresql-client -y
+USER jovyan
+
+COPY ./scripts/pipfile-to-requirements.sh ./scripts/pipfile-to-requirements.sh 
+COPY ./Pipfile.lock ./Pipfile.lock
+
+RUN scripts/pipfile-to-requirements.sh
+RUN pip install -r ./requirements.txt
+RUN rm ./requirements.txt
+

@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  nudge-matcher:
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    user: "0"
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./:/home/jovyan/nudge-matcher
+    depends_on:
+      - database
+    environment:
+      DATA_URL: postgresql://nudge:password@database/nudge_api_dev
+  database:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: nudge
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: nudge_api_dev
+    ports:
+      - "5432"
